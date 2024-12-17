@@ -1,4 +1,4 @@
-# Methylation Analysis Pipeline
+# Single Cell Methylation Analysis Pipeline
 
 This repository provides a Bash script for a methylation analysis pipeline, which includes quality control, trimming, alignment, deduplication, and methylation extraction. The pipeline utilizes tools such as FastQC, Trim Galore!, Bismark, and others.
 
