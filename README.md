@@ -15,7 +15,7 @@ Before running the pipeline, ensure you have the following software installed:
    ```bash
    git clone https://github.com/thekingofall/SCBS.git
    cd SCBS
-   ``
+   ```
 
 2. **Create a new environment using Mamba:**
 
