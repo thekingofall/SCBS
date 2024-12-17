@@ -13,20 +13,20 @@ Before running the pipeline, ensure you have the following software installed:
 1. **Clone the repository:**
 
    ```bash
-   git clone https://github.com/yourusername/methylation-analysis-pipeline.git
-   cd methylation-analysis-pipeline
-   ```
+   git clone https://github.com/thekingofall/SCBS.git
+   cd SCBS
+   ``
 
 2. **Create a new environment using Mamba:**
 
    ```bash
-   mamba create -n methylation-pipeline -c bioconda fastqc trim-galore bismark
+   mamba create -n SCBS -c bioconda fastqc trim-galore bismark
    ```
 
 3. **Activate the environment:**
 
    ```bash
-   conda activate methylation-pipeline
+   conda activate SCBS
    ```
 
 ## Usage
