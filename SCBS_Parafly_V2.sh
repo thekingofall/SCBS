@@ -2,19 +2,24 @@
 
 # Function to display usage information
 usage() {
-    echo "Usage: \$0 -f <input_folder> -o <output_folder> -t <threads>"
+    echo "Usage: \$0 -f <input_folder> -o <output_folder> -t <threads> [-g <genome_path>]"
     exit 1
 }
 
+# Default values
+THREADS=1
+GENOME_PATH="/home/maolp/mao/Ref/Homo_sapiens/UCSC/hg38/Sequence/WholeGenomeFasta/HG38fa/Bisulfite_Genome"
+
 # Parse command-line options
-THREADS=1 # Default threads
-while getopts ":f:o:t:" opt; do
+while getopts ":f:o:t:g:" opt; do
     case $opt in
         f) INPUT_DIR="$OPTARG"
         ;;
         o) OUTPUT_DIR="$OPTARG"
         ;;
         t) THREADS="$OPTARG"
+        ;;
+        g) GENOME_PATH="$OPTARG"
         ;;
         \?) echo "Invalid option -$OPTARG" >&2
             usage
@@ -25,7 +30,7 @@ while getopts ":f:o:t:" opt; do
     esac
 done
 
-# Check if both input and output directories are provided
+# Check if input and output directories are provided
 if [ -z "$INPUT_DIR" ] || [ -z "$OUTPUT_DIR" ]; then
     usage
 fi
@@ -52,6 +57,10 @@ TRIM_CMD_FILE="${SHELL_DIR}/trim_commands.txt"
 > "$TRIM_CMD_FILE"
 for fq1 in ${INPUT_DIR}/*_1.fq.gz; do
     fq2="${fq1/_1.fq.gz/_2.fq.gz}"
+    # Handle cases where _1.fq.gz might have been trimmed to _val_1.fq.gz
+    trimmed_fq1="${fq1/$INPUT_DIR/$OUTPUT_DIR/Trimmed}"
+    trimmed_fq1="${trimmed_fq1/.fq.gz/_val_1.fq.gz}"
+
     if [[ -f "$fq2" ]]; then
         echo "trim_galore --fastqc --output_dir \"${OUTPUT_DIR}/Trimmed\" \"$fq1\" \"$fq2\"" >> "$TRIM_CMD_FILE"
     else
@@ -64,8 +73,19 @@ ParaFly -c "$TRIM_CMD_FILE" -CPU "$THREADS" -v
 echo "Running Bismark Alignment..."
 BISMARK_CMD_FILE="${SHELL_DIR}/bismark_commands.txt"
 > "$BISMARK_CMD_FILE"
-for fq1 in ${OUTPUT_DIR}/Trimmed/*_1.fq.gz; do
-    echo "bismark --non_directional --genome /path/to/genome/ --output_dir \"${OUTPUT_DIR}/Aligned\" \"$fq1\"" >> "$BISMARK_CMD_FILE"
+for fq1 in ${OUTPUT_DIR}/Trimmed/*_val_1.fq.gz; do
+    fq2="${fq1/_val_1.fq.gz/_val_2.fq.gz}"
+    if [[ -f "$fq2" ]]; then
+        echo "bismark --non_directional --genome \"$GENOME_PATH\" --output_dir \"${OUTPUT_DIR}/Aligned\" \"$fq1\" \"$fq2\"" >> "$BISMARK_CMD_FILE"
+    else
+        echo "bismark --non_directional --genome \"$GENOME_PATH\" --output_dir \"${OUTPUT_DIR}/Aligned\" \"$fq1\"" >> "$BISMARK_CMD_FILE"
+    fi
+done
+
+for fq1 in ${OUTPUT_DIR}/Trimmed/*.fq.gz; do
+    if [[ ! "$fq1" == *_val_1.fq.gz ]]; then
+        echo "bismark --non_directional --genome \"$GENOME_PATH\" --output_dir \"${OUTPUT_DIR}/Aligned\" \"$fq1\"" >> "$BISMARK_CMD_FILE"
+    fi
 done
 ParaFly -c "$BISMARK_CMD_FILE" -CPU "$THREADS" -v
 
