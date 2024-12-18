@@ -8,7 +8,7 @@ usage() {
 
 # Default values
 THREADS=1
-GENOME_PATH="/home/maolp/mao/Ref/Homo_sapiens/UCSC/hg38/Sequence/WholeGenomeFasta/HG38fa/Bisulfite_Genome"
+GENOME_PATH="/home/maolp/mao/Ref/Homo_sapiens/UCSC/hg38/Sequence/WholeGenomeFasta/HG38fa/"
 
 # Parse command-line options
 while getopts ":f:o:t:g:" opt; do
