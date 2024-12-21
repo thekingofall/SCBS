@@ -56,7 +56,7 @@ echo "Running Trim Galore!..."
 TRIM_CMD_FILE="${SHELL_DIR}/trim_commands.txt"
 > "$TRIM_CMD_FILE"
 for fq1 in "${INPUT_DIR}"/*_1.fq.gz; do
-    fq2="${fq1/_1.fq.gz/_2.fq.gz}"
+    fq2="${fq1/_1_val_1.fq.gz/_2_val_2.fq.gz}"
     
     # Check if the paired-end file exists
     if [[ -f "$fq2" ]]; then
