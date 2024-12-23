@@ -2,12 +2,13 @@
 
 # Function to display usage information
 usage() {
-    echo "Usage: \$0 -i <input_bam_dir> -o <output_dir> -g <genome_path> [-t <threads>]"
+    echo "Usage: \$0 -i <input_bam_dir> -o <output_dir> [-g <genome_path>] [-t <threads>]"
     exit 1
 }
 
 # Default values
 THREADS=1
+GENOME_PATH="/home/maolp/mao/Ref/Homo_sapiens/UCSC/hg38/Sequence/WholeGenomeFasta/HG38fa/"
 
 # Parse command-line options
 while getopts ":i:o:g:t:" opt; do
@@ -30,7 +31,7 @@ while getopts ":i:o:g:t:" opt; do
 done
 
 # Check if required parameters are provided
-if [ -z "$INPUT_DIR" ] || [ -z "$OUTPUT_DIR" ] || [ -z "$GENOME_PATH" ]; then
+if [ -z "$INPUT_DIR" ] || [ -z "$OUTPUT_DIR" ]; then
     usage
 fi
 
