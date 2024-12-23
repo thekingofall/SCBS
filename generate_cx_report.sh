@@ -2,7 +2,7 @@
 
 # Function to display usage information
 usage() {
-    echo "Usage: \$0 -i <input_bam_dir> -o <output_dir> [-g <genome_path>] [-t <threads>]"
+    echo "Usage: \\$0 -i <input_bam_dir> -o <output_dir> [-g <genome_path>] [-t <threads>]"
     exit 1
 }
 
@@ -45,7 +45,7 @@ CMD_FILE="${OUTPUT_DIR}/cx_report_commands.txt"
 # Generate commands for each BAM file
 for bam in "${INPUT_DIR}"/*.bam; do
     echo "bismark_methylation_extractor \
-        -p \
+        --parallel $THREADS \
         --comprehensive \
         --no_overlap \
         --bedGraph \
@@ -60,6 +60,6 @@ for bam in "${INPUT_DIR}"/*.bam; do
 done
 
 # Execute commands in parallel
-ParaFly -c "$CMD_FILE" -CPU "$THREADS" -v
+cat "$CMD_FILE" | ParaFly -c - -CPU "$THREADS" -v
 
 echo "CX report generation completed."
