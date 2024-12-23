@@ -102,4 +102,29 @@ for dedup_bam in "${OUTPUT_DIR}/Deduplicated/"*.bam; do
 done
 ParaFly -c "$METHYL_CMD_FILE" -CPU "$THREADS" -v
 
+# Step 6: Generate CX report
+echo "Generating CX reports..."
+CX_REPORT_CMD_FILE="${SHELL_DIR}/cx_report_commands.txt"
+> "$CX_REPORT_CMD_FILE"
+for dedup_bam in "${OUTPUT_DIR}/Deduplicated/"*.bam; do
+    sample_name=$(basename "$dedup_bam" .bam)
+    output_dir="${OUTPUT_DIR}/Methylation/CX_Reports"
+    mkdir -p "$output_dir"
+    
+    echo "bismark_methylation_extractor \
+        -p \
+        --comprehensive \
+        --no_overlap \
+        --bedGraph \
+        --cytosine_report \
+        --CX_context \
+        --split_by_chromosome \
+        --counts \
+        --buffer_size 20G \
+        --genome_folder \"$GENOME_PATH\" \
+        \"$dedup_bam\" \
+        --output_dir \"$output_dir\"" >> "$CX_REPORT_CMD_FILE"
+done
+ParaFly -c "$CX_REPORT_CMD_FILE" -CPU "$THREADS" -v
+
 echo "Pipeline completed successfully."
