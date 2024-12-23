@@ -60,6 +60,7 @@ for bam in "${INPUT_DIR}"/*.bam; do
 done
 
 # Execute commands in parallel
-cat "$CMD_FILE" | ParaFly -c - -CPU "$THREADS" -v
+ParaFly -c "$CMD_FILE" -CPU "$THREADS" -v
+
 
 echo "CX report generation completed."
