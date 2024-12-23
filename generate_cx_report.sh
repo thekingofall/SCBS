@@ -51,7 +51,7 @@ for bam in "${INPUT_DIR}"/*.bam; do
         --bedGraph \
         --cytosine_report \
         --CX_context \
-        --split_by_chromosome \
+        #--split_by_chromosome \
         --counts \
         --buffer_size 20G \
         --genome_folder \"$GENOME_PATH\" \
