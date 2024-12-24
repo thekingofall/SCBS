@@ -149,7 +149,7 @@ def main():
         # 组合输出
         # 注意："% of total CpGs"、"% mCpG chr.MT" 在本例中用 "-" 占位
         result_line = (
-            f"{sample_id}\t{sample_id}_oocyte\t"
+            f"{sample_id}\t{sample_id}\t"
             f"{raw_seq}\t{sequence_pairs_total}\t{sequence_pairs_mapped}\t"
             f"{pct_mapped:.1f}\t{pct_duplication:.1f}\t"
             f"{nb_cpgs}\t-\t{pct_mCpG:.1f}\t-\t{pct_mCH:.1f}\t{nb_CHHG}"
