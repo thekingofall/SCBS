@@ -4,6 +4,9 @@
 
 This repository contains a Bash script for performing a DNA methylation analysis pipeline. The pipeline includes quality control, read trimming, alignment, duplicate removal, and methylation extraction. It leverages tools like FastQC, Trim Galore!, Bismark, and ParaFly for parallel processing.
 
+> Paper
+https://www.nature.com/articles/nmeth.3035
+> 
 ## Prerequisites
 
 Before running the script, ensure you have the following tools installed:
