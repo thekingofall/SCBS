@@ -1,7 +1,6 @@
 rm(list = ls())
 library(methylKit)
 
-
 output_dir <- "D:/test2/test/plots2"
 dir.create(output_dir, showWarnings = FALSE)
 
