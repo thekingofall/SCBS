@@ -55,3 +55,67 @@ dev.off()
 pdf(file.path(output_dir, "pca_plot.pdf"))
 PCASamples(meth)
 dev.off()
+
+### processMethylationData
+library(methylKit)
+
+processMethylationData <- function(file.list, sample.ids, output_dir, assembly = "hg38", treatment = c(0, 0, 0), context = "CpG", pipeline = "bismarkCoverage", mincov = 10) {
+  
+  # Create output directory if it doesn't exist
+  dir.create(output_dir, showWarnings = FALSE)
+  
+  # Read methylation data
+  myobj <- methRead(file.list,
+                    sample.id = sample.ids,
+                    assembly = assembly,
+                    treatment = treatment,
+                    context = context,
+                    pipeline = pipeline,
+                    mincov = mincov)
+  
+  # Generate methylation statistics plots
+  pdf(file.path(output_dir, "methylation_stats_all_samples.pdf"), width = 14, height = 5)
+  par(mfrow = c(1, 3))
+  for (i in seq_along(myobj)) {
+    getMethylationStats(myobj[[i]], plot = TRUE, both.strands = FALSE)
+  }
+  dev.off()
+  
+  # Generate coverage statistics plots
+  pdf(file.path(output_dir, "coverage_stats_all_samples.pdf"), width = 14, height = 5)
+  par(mfrow = c(1, 3))
+  for (i in seq_along(myobj)) {
+    getCoverageStats(myobj[[i]], plot = TRUE, both.strands = FALSE)
+  }
+  dev.off()
+  
+  # Unite methylation data
+  meth = unite(myobj, destrand = FALSE)
+  
+  # Generate correlation plot
+  pdf(file.path(output_dir, "correlation_plot.pdf"))
+  getCorrelation(meth, plot = TRUE)
+  dev.off()
+  
+  # Generate cluster plot
+  pdf(file.path(output_dir, "cluster_plot.pdf"))
+  clusterSamples(meth, dist = "correlation", method = "ward", plot = TRUE)
+  dev.off()
+  
+  # Generate PCA plot
+  pdf(file.path(output_dir, "pca_plot.pdf"))
+  PCASamples(meth)
+  dev.off()
+}
+
+# Example usage
+file.list <- list("D:/test2/test/data/data/XM-ZX-HiME-4_L3_1_val_1_bismark_bt2_pe.deduplicated.bismark.cov",
+                  "D:/test2/test/data/data/XM-ZX-HiME-5_L2_1_val_1_bismark_bt2_pe.deduplicated.bismark.cov",
+                  "D:/test2/test/data/data/XM-ZX-HiME-6_L2_1_val_1_bismark_bt2_pe.deduplicated.bismark.cov")
+
+sample.ids <- list("HiME-4", "HiME-5", "HiME-6")
+
+output_dir <- "D:/test2/test/plots2"
+
+processMethylationData(file.list, sample.ids, output_dir)
+
